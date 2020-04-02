@@ -1,1062 +1,663 @@
 {
-   "swagger":"2.0",
-   "info":{
-      "description":"This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
-      "version":"1.0.5",
-      "title":"Swagger Petstore",
-      "termsOfService":"http://swagger.io/terms/",
-      "contact":{
-         "email":"apiteam@swagger.io"
-      },
-      "license":{
-         "name":"Apache 2.0",
-         "url":"http://www.apache.org/licenses/LICENSE-2.0.html"
-      }
+   "openapi": "3.0.2",
+   "info": {
+     "title": "Slurm Rest API",
+     "description": "API to access and control Slurm.",
+     "termsOfService": "https:\/\/github.com\/SchedMD\/slurm\/blob\/master\/DISCLAIMER",
+     "license": {
+       "name": "Apache 2.0",
+       "url": "https:\/\/www.apache.org\/licenses\/LICENSE-2.0.html"
+     },
+     "version": "0.0.35"
    },
-   "host":"petstore.swagger.io",
-   "basePath":"/v2",
-   "tags":[
-      {
-         "name":"pet",
-         "description":"Everything about your Pets",
-         "externalDocs":{
-            "description":"Find out more",
-            "url":"http://swagger.io"
-         }
-      },
-      {
-         "name":"store",
-         "description":"Access to Petstore orders"
-      },
-      {
-         "name":"user",
-         "description":"Operations about user",
-         "externalDocs":{
-            "description":"Find out more about our store",
-            "url":"http://swagger.io"
-         }
-      }
+   "servers": [
+     {
+       "url": "\/"
+     }
    ],
-   "schemes":[
-      "https",
-      "http"
-   ],
-   "paths":{
-      "/pet/{petId}/uploadImage":{
-         "post":{
-            "tags":[
-               "pet"
-            ],
-            "summary":"uploads an image",
-            "description":"",
-            "operationId":"uploadFile",
-            "consumes":[
-               "multipart/form-data"
-            ],
-            "produces":[
-               "application/json"
-            ],
-            "parameters":[
-               {
-                  "name":"petId",
-                  "in":"path",
-                  "description":"ID of pet to update",
-                  "required":true,
-                  "type":"integer",
-                  "format":"int64"
-               },
-               {
-                  "name":"additionalMetadata",
-                  "in":"formData",
-                  "description":"Additional data to pass to server",
-                  "required":false,
-                  "type":"string"
-               },
-               {
-                  "name":"file",
-                  "in":"formData",
-                  "description":"file to upload",
-                  "required":false,
-                  "type":"file"
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"successful operation",
-                  "schema":{
-                     "$ref":"#/definitions/ApiResponse"
-                  }
-               }
-            },
-            "security":[
-               {
-                  "petstore_auth":[
-                     "write:pets",
-                     "read:pets"
-                  ]
-               }
-            ]
+   "paths": {
+     "\/slurm\/v0.0.35\/diag\/": {
+       "get": {
+         "summary": "get diagnostics",
+         "responses": {
+           "200": {
+             "description": "dictionary of statistics"
+           }
          }
-      },
-      "/pet":{
-         "post":{
-            "tags":[
-               "pet"
-            ],
-            "summary":"Add a new pet to the store",
-            "description":"",
-            "operationId":"addPet",
-            "consumes":[
-               "application/json",
-               "application/xml"
-            ],
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "in":"body",
-                  "name":"body",
-                  "description":"Pet object that needs to be added to the store",
-                  "required":true,
-                  "schema":{
-                     "$ref":"#/definitions/Pet"
-                  }
-               }
-            ],
-            "responses":{
-               "405":{
-                  "description":"Invalid input"
-               }
-            },
-            "security":[
-               {
-                  "petstore_auth":[
-                     "write:pets",
-                     "read:pets"
-                  ]
-               }
-            ]
-         },
-         "put":{
-            "tags":[
-               "pet"
-            ],
-            "summary":"Update an existing pet",
-            "description":"",
-            "operationId":"updatePet",
-            "consumes":[
-               "application/json",
-               "application/xml"
-            ],
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "in":"body",
-                  "name":"body",
-                  "description":"Pet object that needs to be added to the store",
-                  "required":true,
-                  "schema":{
-                     "$ref":"#/definitions/Pet"
-                  }
-               }
-            ],
-            "responses":{
-               "400":{
-                  "description":"Invalid ID supplied"
-               },
-               "404":{
-                  "description":"Pet not found"
-               },
-               "405":{
-                  "description":"Validation exception"
-               }
-            },
-            "security":[
-               {
-                  "petstore_auth":[
-                     "write:pets",
-                     "read:pets"
-                  ]
-               }
-            ]
+       }
+     },
+     "\/slurm\/v0.0.35\/ping\/": {
+       "get": {
+         "summary": "ping test",
+         "responses": {
+           "200": {
+             "description": "results of ping test"
+           }
          }
-      },
-      "/pet/findByStatus":{
-         "get":{
-            "tags":[
-               "pet"
-            ],
-            "summary":"Finds Pets by status",
-            "description":"Multiple status values can be provided with comma separated strings",
-            "operationId":"findPetsByStatus",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"status",
-                  "in":"query",
-                  "description":"Status values that need to be considered for filter",
-                  "required":true,
-                  "type":"array",
-                  "items":{
-                     "type":"string",
-                     "enum":[
-                        "available",
-                        "pending",
-                        "sold"
-                     ],
-                     "default":"available"
-                  },
-                  "collectionFormat":"multi"
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"successful operation",
-                  "schema":{
-                     "type":"array",
-                     "items":{
-                        "$ref":"#/definitions/Pet"
-                     }
-                  }
-               },
-               "400":{
-                  "description":"Invalid status value"
-               }
-            },
-            "security":[
-               {
-                  "petstore_auth":[
-                     "write:pets",
-                     "read:pets"
-                  ]
-               }
-            ]
+       }
+     },
+     "\/slurm\/v0.0.35\/jobs\/": {
+       "get": {
+         "summary": "get list of jobs",
+         "responses": {
+           "200": {
+             "description": "array of all job information in slurmctld"
+           }
          }
-      },
-      "/pet/findByTags":{
-         "get":{
-            "tags":[
-               "pet"
-            ],
-            "summary":"Finds Pets by tags",
-            "description":"Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
-            "operationId":"findPetsByTags",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"tags",
-                  "in":"query",
-                  "description":"Tags to filter by",
-                  "required":true,
-                  "type":"array",
-                  "items":{
-                     "type":"string"
-                  },
-                  "collectionFormat":"multi"
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"successful operation",
-                  "schema":{
-                     "type":"array",
-                     "items":{
-                        "$ref":"#/definitions/Pet"
-                     }
-                  }
-               },
-               "400":{
-                  "description":"Invalid tag value"
-               }
-            },
-            "security":[
-               {
-                  "petstore_auth":[
-                     "write:pets",
-                     "read:pets"
-                  ]
-               }
-            ],
-            "deprecated":true
-         }
-      },
-      "/pet/{petId}":{
-         "get":{
-            "tags":[
-               "pet"
-            ],
-            "summary":"Find pet by ID",
-            "description":"Returns a single pet",
-            "operationId":"getPetById",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"petId",
-                  "in":"path",
-                  "description":"ID of pet to return",
-                  "required":true,
-                  "type":"integer",
-                  "format":"int64"
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"successful operation",
-                  "schema":{
-                     "$ref":"#/definitions/Pet"
-                  }
-               },
-               "400":{
-                  "description":"Invalid ID supplied"
-               },
-               "404":{
-                  "description":"Pet not found"
-               }
-            },
-            "security":[
-               {
-                  "api_key":[
-
-                  ]
-               }
-            ]
-         },
-         "post":{
-            "tags":[
-               "pet"
-            ],
-            "summary":"Updates a pet in the store with form data",
-            "description":"",
-            "operationId":"updatePetWithForm",
-            "consumes":[
-               "application/x-www-form-urlencoded"
-            ],
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"petId",
-                  "in":"path",
-                  "description":"ID of pet that needs to be updated",
-                  "required":true,
-                  "type":"integer",
-                  "format":"int64"
-               },
-               {
-                  "name":"name",
-                  "in":"formData",
-                  "description":"Updated name of the pet",
-                  "required":false,
-                  "type":"string"
-               },
-               {
-                  "name":"status",
-                  "in":"formData",
-                  "description":"Updated status of the pet",
-                  "required":false,
-                  "type":"string"
-               }
-            ],
-            "responses":{
-               "405":{
-                  "description":"Invalid input"
-               }
-            },
-            "security":[
-               {
-                  "petstore_auth":[
-                     "write:pets",
-                     "read:pets"
-                  ]
-               }
-            ]
-         },
-         "delete":{
-            "tags":[
-               "pet"
-            ],
-            "summary":"Deletes a pet",
-            "description":"",
-            "operationId":"deletePet",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"api_key",
-                  "in":"header",
-                  "required":false,
-                  "type":"string"
-               },
-               {
-                  "name":"petId",
-                  "in":"path",
-                  "description":"Pet id to delete",
-                  "required":true,
-                  "type":"integer",
-                  "format":"int64"
-               }
-            ],
-            "responses":{
-               "400":{
-                  "description":"Invalid ID supplied"
-               },
-               "404":{
-                  "description":"Pet not found"
-               }
-            },
-            "security":[
-               {
-                  "petstore_auth":[
-                     "write:pets",
-                     "read:pets"
-                  ]
-               }
-            ]
-         }
-      },
-      "/store/order":{
-         "post":{
-            "tags":[
-               "store"
-            ],
-            "summary":"Place an order for a pet",
-            "description":"",
-            "operationId":"placeOrder",
-            "consumes":[
-               "application/json"
-            ],
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "in":"body",
-                  "name":"body",
-                  "description":"order placed for purchasing the pet",
-                  "required":true,
-                  "schema":{
-                     "$ref":"#/definitions/Order"
-                  }
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"successful operation",
-                  "schema":{
-                     "$ref":"#/definitions/Order"
-                  }
-               },
-               "400":{
-                  "description":"Invalid Order"
-               }
-            }
-         }
-      },
-      "/store/order/{orderId}":{
-         "get":{
-            "tags":[
-               "store"
-            ],
-            "summary":"Find purchase order by ID",
-            "description":"For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
-            "operationId":"getOrderById",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"orderId",
-                  "in":"path",
-                  "description":"ID of pet that needs to be fetched",
-                  "required":true,
-                  "type":"integer",
-                  "maximum":10,
-                  "minimum":1,
-                  "format":"int64"
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"successful operation",
-                  "schema":{
-                     "$ref":"#/definitions/Order"
-                  }
-               },
-               "400":{
-                  "description":"Invalid ID supplied"
-               },
-               "404":{
-                  "description":"Order not found"
-               }
-            }
-         },
-         "delete":{
-            "tags":[
-               "store"
-            ],
-            "summary":"Delete purchase order by ID",
-            "description":"For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors",
-            "operationId":"deleteOrder",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"orderId",
-                  "in":"path",
-                  "description":"ID of the order that needs to be deleted",
-                  "required":true,
-                  "type":"integer",
-                  "minimum":1,
-                  "format":"int64"
-               }
-            ],
-            "responses":{
-               "400":{
-                  "description":"Invalid ID supplied"
-               },
-               "404":{
-                  "description":"Order not found"
-               }
-            }
-         }
-      },
-      "/store/inventory":{
-         "get":{
-            "tags":[
-               "store"
-            ],
-            "summary":"Returns pet inventories by status",
-            "description":"Returns a map of status codes to quantities",
-            "operationId":"getInventory",
-            "produces":[
-               "application/json"
-            ],
-            "parameters":[
-
-            ],
-            "responses":{
-               "200":{
-                  "description":"successful operation",
-                  "schema":{
-                     "type":"object",
-                     "additionalProperties":{
-                        "type":"integer",
-                        "format":"int32"
-                     }
-                  }
-               }
-            },
-            "security":[
-               {
-                  "api_key":[
-
-                  ]
-               }
-            ]
-         }
-      },
-      "/user/createWithArray":{
-         "post":{
-            "tags":[
-               "user"
-            ],
-            "summary":"Creates list of users with given input array",
-            "description":"",
-            "operationId":"createUsersWithArrayInput",
-            "consumes":[
-               "application/json"
-            ],
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "in":"body",
-                  "name":"body",
-                  "description":"List of user object",
-                  "required":true,
-                  "schema":{
-                     "type":"array",
-                     "items":{
-                        "$ref":"#/definitions/User"
-                     }
-                  }
-               }
-            ],
-            "responses":{
-               "default":{
-                  "description":"successful operation"
-               }
-            }
-         }
-      },
-      "/user/createWithList":{
-         "post":{
-            "tags":[
-               "user"
-            ],
-            "summary":"Creates list of users with given input array",
-            "description":"",
-            "operationId":"createUsersWithListInput",
-            "consumes":[
-               "application/json"
-            ],
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "in":"body",
-                  "name":"body",
-                  "description":"List of user object",
-                  "required":true,
-                  "schema":{
-                     "type":"array",
-                     "items":{
-                        "$ref":"#/definitions/User"
-                     }
-                  }
-               }
-            ],
-            "responses":{
-               "default":{
-                  "description":"successful operation"
-               }
-            }
-         }
-      },
-      "/user/{username}":{
-         "get":{
-            "tags":[
-               "user"
-            ],
-            "summary":"Get user by user name",
-            "description":"",
-            "operationId":"getUserByName",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"username",
-                  "in":"path",
-                  "description":"The name that needs to be fetched. Use user1 for testing. ",
-                  "required":true,
-                  "type":"string"
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"successful operation",
-                  "schema":{
-                     "$ref":"#/definitions/User"
-                  }
-               },
-               "400":{
-                  "description":"Invalid username supplied"
-               },
-               "404":{
-                  "description":"User not found"
-               }
-            }
-         },
-         "put":{
-            "tags":[
-               "user"
-            ],
-            "summary":"Updated user",
-            "description":"This can only be done by the logged in user.",
-            "operationId":"updateUser",
-            "consumes":[
-               "application/json"
-            ],
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"username",
-                  "in":"path",
-                  "description":"name that need to be updated",
-                  "required":true,
-                  "type":"string"
-               },
-               {
-                  "in":"body",
-                  "name":"body",
-                  "description":"Updated user object",
-                  "required":true,
-                  "schema":{
-                     "$ref":"#/definitions/User"
-                  }
-               }
-            ],
-            "responses":{
-               "400":{
-                  "description":"Invalid user supplied"
-               },
-               "404":{
-                  "description":"User not found"
-               }
-            }
-         },
-         "delete":{
-            "tags":[
-               "user"
-            ],
-            "summary":"Delete user",
-            "description":"This can only be done by the logged in user.",
-            "operationId":"deleteUser",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"username",
-                  "in":"path",
-                  "description":"The name that needs to be deleted",
-                  "required":true,
-                  "type":"string"
-               }
-            ],
-            "responses":{
-               "400":{
-                  "description":"Invalid username supplied"
-               },
-               "404":{
-                  "description":"User not found"
-               }
-            }
-         }
-      },
-      "/user/login":{
-         "get":{
-            "tags":[
-               "user"
-            ],
-            "summary":"Logs user into the system",
-            "description":"",
-            "operationId":"loginUser",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "name":"username",
-                  "in":"query",
-                  "description":"The user name for login",
-                  "required":true,
-                  "type":"string"
-               },
-               {
-                  "name":"password",
-                  "in":"query",
-                  "description":"The password for login in clear text",
-                  "required":true,
-                  "type":"string"
-               }
-            ],
-            "responses":{
-               "200":{
-                  "description":"successful operation",
-                  "headers":{
-                     "X-Expires-After":{
-                        "type":"string",
-                        "format":"date-time",
-                        "description":"date in UTC when token expires"
-                     },
-                     "X-Rate-Limit":{
-                        "type":"integer",
-                        "format":"int32",
-                        "description":"calls per hour allowed by the user"
-                     }
-                  },
-                  "schema":{
-                     "type":"string"
-                  }
-               },
-               "400":{
-                  "description":"Invalid username/password supplied"
-               }
-            }
-         }
-      },
-      "/user/logout":{
-         "get":{
-            "tags":[
-               "user"
-            ],
-            "summary":"Logs out current logged in user session",
-            "description":"",
-            "operationId":"logoutUser",
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-
-            ],
-            "responses":{
-               "default":{
-                  "description":"successful operation"
-               }
-            }
-         }
-      },
-      "/user":{
-         "post":{
-            "tags":[
-               "user"
-            ],
-            "summary":"Create user",
-            "description":"This can only be done by the logged in user.",
-            "operationId":"createUser",
-            "consumes":[
-               "application/json"
-            ],
-            "produces":[
-               "application/json",
-               "application/xml"
-            ],
-            "parameters":[
-               {
-                  "in":"body",
-                  "name":"body",
-                  "description":"Created user object",
-                  "required":true,
-                  "schema":{
-                     "$ref":"#/definitions/User"
-                  }
-               }
-            ],
-            "responses":{
-               "default":{
-                  "description":"successful operation"
-               }
-            }
-         }
-      }
-   },
-   "securityDefinitions":{
-      "api_key":{
-         "type":"apiKey",
-         "name":"api_key",
-         "in":"header"
-      },
-      "petstore_auth":{
-         "type":"oauth2",
-         "authorizationUrl":"https://petstore.swagger.io/oauth/authorize",
-         "flow":"implicit",
-         "scopes":{
-            "read:pets":"read your pets",
-            "write:pets":"modify pets in your account"
-         }
-      }
-   },
-   "definitions":{
-      "ApiResponse":{
-         "type":"object",
-         "properties":{
-            "code":{
-               "type":"integer",
-               "format":"int32"
-            },
-            "type":{
-               "type":"string"
-            },
-            "message":{
-               "type":"string"
-            }
-         }
-      },
-      "Category":{
-         "type":"object",
-         "properties":{
-            "id":{
-               "type":"integer",
-               "format":"int64"
-            },
-            "name":{
-               "type":"string"
-            }
-         },
-         "xml":{
-            "name":"Category"
-         }
-      },
-      "Pet":{
-         "type":"object",
-         "required":[
-            "name",
-            "photoUrls"
+       }
+     },
+     "\/slurm\/v0.0.35\/job\/{job_id}": {
+       "get": {
+         "summary": "get job info",
+         "parameters": [
+           {
+             "name": "job_id",
+             "in": "path",
+             "description": "Slurm Job ID",
+             "required": true,
+             "style": "simple",
+             "explode": false,
+             "schema": {
+               "type": "integer",
+               "format": "int64"
+             }
+           }
          ],
-         "properties":{
-            "id":{
-               "type":"integer",
-               "format":"int64"
-            },
-            "category":{
-               "$ref":"#/definitions/Category"
-            },
-            "name":{
-               "type":"string",
-               "example":"doggie"
-            },
-            "photoUrls":{
-               "type":"array",
-               "xml":{
-                  "wrapped":true
-               },
-               "items":{
-                  "type":"string",
-                  "xml":{
-                     "name":"photoUrl"
-                  }
+         "responses": {
+           "200": {
+             "description": "job information"
+           },
+           "500": {
+             "description": "job not found"
+           }
+         }
+       },
+       "post": {
+         "summary": "update job",
+         "parameters": [
+           {
+             "name": "job_id",
+             "in": "path",
+             "description": "Slurm Job ID",
+             "required": true,
+             "style": "simple",
+             "explode": false,
+             "schema": {
+               "type": "integer",
+               "format": "int64"
+             }
+           }
+         ],
+         "requestBody": {
+           "description": "update job",
+           "content": {
+             "application\/json": {
+               "schema": {
+                 "$ref": "#\/components\/schemas\/job_properties"
                }
-            },
-            "tags":{
-               "type":"array",
-               "xml":{
-                  "wrapped":true
-               },
-               "items":{
-                  "xml":{
-                     "name":"tag"
-                  },
-                  "$ref":"#/definitions/Tag"
+             },
+             "application\/x-yaml": {
+               "schema": {
+                 "$ref": "#\/components\/schemas\/job_properties"
                }
-            },
-            "status":{
-               "type":"string",
-               "description":"pet status in the store",
-               "enum":[
-                  "available",
-                  "pending",
-                  "sold"
-               ]
-            }
+             }
+           },
+           "required": true
          },
-         "xml":{
-            "name":"Pet"
+         "responses": {
+           "200": {
+             "description": "job information"
+           },
+           "500": {
+             "description": "job not found"
+           }
          }
-      },
-      "Tag":{
-         "type":"object",
-         "properties":{
-            "id":{
-               "type":"integer",
-               "format":"int64"
-            },
-            "name":{
-               "type":"string"
-            }
+       },
+       "delete": {
+         "summary": "cancel or signal job",
+         "parameters": [
+           {
+             "name": "job_id",
+             "in": "path",
+             "description": "Slurm Job ID",
+             "required": true,
+             "style": "simple",
+             "explode": false,
+             "schema": {
+               "type": "integer",
+               "format": "int64"
+             }
+           },
+           {
+             "name": "signal",
+             "in": "query",
+             "description": "signal to send to job",
+             "required": false,
+             "style": "form",
+             "explode": true,
+             "schema": {
+               "$ref": "#\/components\/schemas\/signal"
+             }
+           }
+         ],
+         "responses": {
+           "200": {
+             "description": "job cancelled or sent signal"
+           },
+           "500": {
+             "description": "job not found"
+           }
+         }
+       }
+     },
+     "\/slurm\/v0.0.35\/job\/submit": {
+       "post": {
+         "summary": "submit new job",
+         "requestBody": {
+           "description": "submit new job",
+           "content": {
+             "application\/json": {
+               "schema": {
+                 "$ref": "#\/components\/schemas\/job_properties"
+               }
+             },
+             "application\/x-yaml": {
+               "schema": {
+                 "$ref": "#\/components\/schemas\/job_properties"
+               }
+             }
+           },
+           "required": true
          },
-         "xml":{
-            "name":"Tag"
+         "responses": {
+           "200": {
+             "description": "job submitted"
+           },
+           "500": {
+             "description": "job rejected"
+           }
          }
-      },
-      "Order":{
-         "type":"object",
-         "properties":{
-            "id":{
-               "type":"integer",
-               "format":"int64"
-            },
-            "petId":{
-               "type":"integer",
-               "format":"int64"
-            },
-            "quantity":{
-               "type":"integer",
-               "format":"int32"
-            },
-            "shipDate":{
-               "type":"string",
-               "format":"date-time"
-            },
-            "status":{
-               "type":"string",
-               "description":"Order Status",
-               "enum":[
-                  "placed",
-                  "approved",
-                  "delivered"
-               ]
-            },
-            "complete":{
-               "type":"boolean"
-            }
-         },
-         "xml":{
-            "name":"Order"
+       }
+     },
+     "\/slurm\/v0.0.35\/nodes\/": {
+       "get": {
+         "summary": "get all node info",
+         "responses": {
+           "200": {
+             "description": "nodes information"
+           },
+           "500": {
+             "description": "no nodes in cluster"
+           }
          }
-      },
-      "User":{
-         "type":"object",
-         "properties":{
-            "id":{
-               "type":"integer",
-               "format":"int64"
-            },
-            "username":{
-               "type":"string"
-            },
-            "firstName":{
-               "type":"string"
-            },
-            "lastName":{
-               "type":"string"
-            },
-            "email":{
-               "type":"string"
-            },
-            "password":{
-               "type":"string"
-            },
-            "phone":{
-               "type":"string"
-            },
-            "userStatus":{
-               "type":"integer",
-               "format":"int32",
-               "description":"User Status"
-            }
-         },
-         "xml":{
-            "name":"User"
+       }
+     },
+     "\/slurm\/v0.0.35\/node\/{node_name}": {
+       "get": {
+         "summary": "get node info",
+         "parameters": [
+           {
+             "name": "node_name",
+             "in": "path",
+             "description": "Slurm Node Name",
+             "required": true,
+             "style": "simple",
+             "explode": false,
+             "schema": {
+               "type": "string"
+             }
+           }
+         ],
+         "responses": {
+           "200": {
+             "description": "node information"
+           },
+           "500": {
+             "description": "node not found"
+           }
          }
-      }
+       }
+     },
+     "\/slurm\/v0.0.35\/partitions\/": {
+       "get": {
+         "summary": "get all partition info",
+         "responses": {
+           "200": {
+             "description": "partitions information"
+           },
+           "500": {
+             "description": "no partitions in cluster"
+           }
+         }
+       }
+     },
+     "\/slurm\/v0.0.35\/partition\/{partition_name}": {
+       "get": {
+         "summary": "get partition info",
+         "parameters": [
+           {
+             "name": "partition_name",
+             "in": "path",
+             "description": "Slurm Partition Name",
+             "required": true,
+             "style": "simple",
+             "explode": false,
+             "schema": {
+               "type": "string"
+             }
+           }
+         ],
+         "responses": {
+           "200": {
+             "description": "partition information"
+           },
+           "500": {
+             "description": "partition not found"
+           }
+         }
+       }
+     },
+     "\/openapi.yaml": {
+       "get": {
+         "summary": "Retrieve OpenAPI Specification",
+         "responses": {
+           "200": {
+             "description": "OpenAPI Specification"
+           }
+         }
+       }
+     },
+     "\/openapi.json": {
+       "get": {
+         "summary": "Retrieve OpenAPI Specification",
+         "responses": {
+           "200": {
+             "description": "OpenAPI Specification"
+           }
+         }
+       }
+     },
+     "\/openapi": {
+       "get": {
+         "summary": "Retrieve OpenAPI Specification",
+         "responses": {
+           "200": {
+             "description": "OpenAPI Specification"
+           }
+         }
+       }
+     },
+     "\/openapi\/v3": {
+       "get": {
+         "summary": "Retrieve OpenAPI Specification",
+         "responses": {
+           "200": {
+             "description": "OpenAPI Specification"
+           }
+         }
+       }
+     }
    },
-   "externalDocs":{
-      "description":"Find out more about Swagger",
-      "url":"http://swagger.io"
+   "components": {
+     "schemas": {
+       "signal": {
+         "oneOf": [
+           {
+             "type": "integer",
+             "description": "POSIX signal number",
+             "format": "int32"
+           },
+           {
+             "type": "string",
+             "description": "POSIX signal name",
+             "format": "int32",
+             "enum": [
+               "HUP",
+               "INT",
+               "QUIT",
+               "ABRT",
+               "KILL",
+               "ALRM",
+               "TERM",
+               "USR1",
+               "USR2",
+               "URG",
+               "CONT",
+               "STOP",
+               "TSTP",
+               "TTIN",
+               "TTOU"
+             ]
+           }
+         ]
+       },
+       "job_properties": {
+         "properties": {
+           "account": {
+             "type": "string",
+             "description": "Charge resources used by this job to specified account."
+           },
+           "account_gather_freqency": {
+             "type": "string",
+             "description": "Define the job accounting and profiling sampling intervals."
+           },
+           "argv": {
+             "type": "array",
+             "description": "Arguments to the script.",
+             "items": {
+               "type": "string"
+             }
+           },
+           "array": {
+             "type": "string",
+             "description": "Submit a job array, multiple jobs to be executed with identical parameters. The indexes specification identifies what array index values should be used."
+           },
+           "batch_features": {
+             "type": "string",
+             "description": "features required for batch script's node"
+           },
+           "begin_time": {
+             "type": "string",
+             "description": "Submit the batch script to the Slurm controller immediately, like normal, but tell the controller to defer the allocation of the job until the specified time."
+           },
+           "burst_buffer": {
+             "type": "string",
+             "description": "Burst buffer specification."
+           },
+           "cluster_constraints": {
+             "type": "string",
+             "description": "Specifies features that a federated cluster must have to have a sibling job submitted to it."
+           },
+           "comment": {
+             "type": "string",
+             "description": "An arbitrary comment."
+           },
+           "constraints": {
+             "type": "string",
+             "description": "node features required by job."
+           },
+           "core_specification": {
+             "type": "integer",
+             "description": "Count of specialized threads per node reserved by the job for system operations and not used by the application."
+           },
+           "cores_per_socket": {
+             "type": "integer",
+             "description": "Restrict node selection to nodes with at least the specified number of cores per socket."
+           },
+           "cpu_binding": {
+             "type": "string",
+             "description": "Cpu binding"
+           },
+           "cpu_binding_hint": {
+             "type": "string",
+             "description": "Cpu binding hint"
+           },
+           "cpu_frequency": {
+             "type": "string",
+             "description": "Request that job steps initiated by srun commands inside this sbatch script be run at some requested frequency if possible, on the CPUs selected for the step on the compute node(s)."
+           },
+           "cpus_per_gpu": {
+             "type": "string",
+             "description": "Number of CPUs requested per allocated GPU."
+           },
+           "cpus_per_task": {
+             "type": "integer",
+             "description": "Advise the Slurm controller that ensuing job steps will require ncpus number of processors per task."
+           },
+           "current_working_directory": {
+             "type": "string",
+             "description": "Instruct Slurm to connect the batch script's standard output directly to the file name."
+           },
+           "deadline": {
+             "type": "string",
+             "description": "Remove the job if no ending is possible before this deadline (start > (deadline - time[-min]))."
+           },
+           "delay_boot": {
+             "type": "integer",
+             "description": "Do not reboot nodes in order to satisfied this job's feature specification if the job has been eligible to run for less than this time period."
+           },
+           "dependency": {
+             "type": "string",
+             "description": "Defer the start of this job until the specified dependencies have been satisfied completed."
+           },
+           "distribution": {
+             "type": "string",
+             "description": "Specify alternate distribution methods for remote processes."
+           },
+           "environment": {
+             "type": "object",
+             "description": "Dictionary of environment entries."
+           },
+           "exclusive": {
+             "oneOf": [
+               {
+                 "type": "string",
+                 "description": "The job allocation can share nodes just other users with the \"user\" option or with the \"mcs\" option).",
+                 "enum": [
+                   "user",
+                   "mcs"
+                 ]
+               },
+               {
+                 "type": "boolean",
+                 "description": "Request exclusive use of nodes.",
+                 "default": true
+               }
+             ]
+           },
+           "get_user_environment": {
+             "type": "boolean",
+             "description": "Load new login environment for user on job node."
+           },
+           "gres": {
+             "type": "string",
+             "description": "Specifies a comma delimited list of generic consumable resources."
+           },
+           "gres_flags": {
+             "type": "string",
+             "description": "Specify generic resource task binding options.",
+             "enum": [
+               "disable-binding",
+               "enforce-binding"
+             ]
+           },
+           "gpu_binding": {
+             "type": "string",
+             "description": "Requested binding of tasks to GPU."
+           },
+           "gpu_frequency": {
+             "type": "string",
+             "description": "Requested GPU frequency."
+           },
+           "gpus": {
+             "type": "string",
+             "description": "GPUs per job."
+           },
+           "gpus_per_node": {
+             "type": "string",
+             "description": "GPUs per node."
+           },
+           "gpus_per_socket": {
+             "type": "string",
+             "description": "GPUs per socket."
+           },
+           "gpus_per_task": {
+             "type": "string",
+             "description": "GPUs per task."
+           },
+           "hold": {
+             "type": "boolean",
+             "description": "Specify the job is to be submitted in a held state (priority of zero)."
+           },
+           "kill_on_invalid_dependency": {
+             "type": "boolean",
+             "description": "If a job has an invalid dependency, then Slurm is to terminate it."
+           },
+           "licenses": {
+             "type": "string",
+             "description": "Specification of licenses (or other resources available on all nodes of the cluster) which must be allocated to this job."
+           },
+           "mail_type": {
+             "type": "string",
+             "description": "Notify user by email when certain event types occur."
+           },
+           "mail_user": {
+             "type": "string",
+             "description": "User to receive email notification of state changes as defined by mail_type."
+           },
+           "mcs_label": {
+             "type": "string",
+             "description": "This parameter is a group among the groups of the user."
+           },
+           "memory_binding": {
+             "type": "string",
+             "description": "Bind tasks to memory."
+           },
+           "memory_per_cpu": {
+             "type": "integer",
+             "description": "Minimum real memory per cpu (MB)."
+           },
+           "memory_per_gpu": {
+             "type": "integer",
+             "description": "Minimum memory required per allocated GPU."
+           },
+           "memory_per_node": {
+             "type": "integer",
+             "description": "Minimum real memory per node (MB)."
+           },
+           "minimum_cpus_per_node": {
+             "type": "integer",
+             "description": "Minimum number of CPUs per node."
+           },
+           "minimum_nodes": {
+             "type": "boolean",
+             "description": "If a range of node counts is given, prefer the smaller count."
+           },
+           "name": {
+             "type": "string",
+             "description": "Specify a name for the job allocation."
+           },
+           "nice": {
+             "type": "string",
+             "description": "Run the job with an adjusted scheduling priority within Slurm."
+           },
+           "no_kill": {
+             "type": "boolean",
+             "description": "Do not automatically terminate a job if one of the nodes it has been allocated fails."
+           },
+           "nodes": {
+             "oneOf": [
+               {
+                 "type": "integer",
+                 "description": "Request that a minimum of minnodes nodes be allocated to this job."
+               },
+               {
+                 "maxItems": 2,
+                 "minItems": 2,
+                 "type": "array",
+                 "description": "Request that a minimum of minnodes nodes and a maximum node count.",
+                 "items": {
+                   "type": "integer"
+                 }
+               }
+             ]
+           },
+           "open_mode": {
+             "type": "string",
+             "description": "Open the output and error files using append or truncate mode as specified.",
+             "default": "append",
+             "enum": [
+               "append",
+               "truncate"
+             ]
+           },
+           "partition": {
+             "type": "string",
+             "description": "Request a specific partition for the resource allocation."
+           },
+           "priority": {
+             "type": "string",
+             "description": "Request a specific job priority."
+           },
+           "qos": {
+             "type": "string",
+             "description": "Request a quality of service for the job."
+           },
+           "requeue": {
+             "type": "boolean",
+             "description": "Specifies that the batch job should eligible to being requeue."
+           },
+           "reservation": {
+             "type": "string",
+             "description": "Allocate resources for the job from the named reservation."
+           },
+           "signal": {
+             "pattern": "[B:]<sig_num>[@<sig_time>]",
+             "type": "string",
+             "description": "When a job is within sig_time seconds of its end time, send it the signal sig_num."
+           },
+           "sockets_per_node": {
+             "type": "integer",
+             "description": "Restrict node selection to nodes with at least the specified number of sockets."
+           },
+           "spread_job": {
+             "type": "boolean",
+             "description": "Spread the job allocation over as many nodes as possible and attempt to evenly distribute tasks across the allocated nodes."
+           },
+           "standard_error": {
+             "type": "string",
+             "description": "Instruct Slurm to connect the batch script's standard error directly to the file name."
+           },
+           "standard_in": {
+             "type": "string",
+             "description": "Instruct Slurm to connect the batch script's standard input directly to the file name specified."
+           },
+           "standard_out": {
+             "type": "string",
+             "description": "Instruct Slurm to connect the batch script's standard output directly to the file name."
+           },
+           "tasks": {
+             "type": "integer",
+             "description": "Advises the Slurm controller that job steps run within the allocation will launch a maximum of number tasks and to provide for sufficient resources."
+           },
+           "tasks_per_core": {
+             "type": "integer",
+             "description": "Request the maximum ntasks be invoked on each core."
+           },
+           "tasks_per_node": {
+             "type": "integer",
+             "description": "Request the maximum ntasks be invoked on each node."
+           },
+           "tasks_per_socket": {
+             "type": "integer",
+             "description": "Request the maximum ntasks be invoked on each socket."
+           },
+           "thread_specification": {
+             "type": "integer",
+             "description": "Count of specialized threads per node reserved by the job for system operations and not used by the application."
+           },
+           "threads_per_core": {
+             "type": "integer",
+             "description": "Restrict node selection to nodes with at least the specified number of threads per core."
+           },
+           "time_limit": {
+             "type": "integer",
+             "description": "Step time limit."
+           },
+           "time_minimum": {
+             "type": "integer",
+             "description": "Minimum run time in minutes."
+           },
+           "wait_all_nodes": {
+             "type": "boolean",
+             "description": "Do not begin execution until all nodes are ready for use."
+           },
+           "wckey": {
+             "type": "string",
+             "description": "Specify wckey to be used with job."
+           }
+         }
+       }
+     }
    }
-}
+ }
